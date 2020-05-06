@@ -23,7 +23,7 @@ public class DeleteServlet extends HttpServlet {
     }
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String book_id = request.getParameter("book_id");
+		String book_id = request.getParameter("id");
 		int id = Integer.parseInt(book_id);
 		response.getWriter().print("You have selected user Id : "+id);
 		bookDao bookDao = new bookDao();
@@ -33,6 +33,7 @@ public class DeleteServlet extends HttpServlet {
 			boolean b = bookDao.deleteBookbyid(del);
 			PrintWriter out = response.getWriter();
 			out.println("Entry has been deleted successful");
+			request.getRequestDispatcher("ListServlet").include(request, response);
 		}
 		
 	}

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.model.Book;
+import com.model.User;
 
 public class bookDao {
 
@@ -17,11 +18,12 @@ public class bookDao {
 	public static String driverName = "com.mysql.cj.jdbc.Driver";
 	public static String user = "root";
 	public static String password = "root";
-	
-	public static ArrayList<Book> list = new ArrayList<>();
+
+
 	Connection con = null;
+
 	public Connection getDbConnection() {
-	
+
 		try {
 			Class.forName(driverName);
 		} catch (ClassNotFoundException e1) {
@@ -59,37 +61,47 @@ public class bookDao {
 		}
 	}
 
-
-		public ArrayList<Book> ListBook() {
+	public ArrayList<Book> ListBook() {
+			
+			ArrayList<Book> books=new ArrayList<Book>();
 			Connection con = getDbConnection();
-			String sql = "select * from book";
-			try {
-				Statement st = con.createStatement();
+			
+		try{
+				String sql = "select * from book";
+				PreparedStatement st = con.prepareStatement(sql);
+				ResultSet rs = st.executeQuery();
 				
-				ResultSet rs = st.executeQuery(sql);
-				
-				while (rs.next()) {
-				
+		    
+				while(rs.next())
+				{
 					Book book = new Book();
-					
+		      
 					book.setId(rs.getInt("book_id"));
 					book.setTitle(rs.getString("title"));
 					book.setAuthor(rs.getString("author"));
 					book.setPrice(rs.getFloat("price"));
 					
-				list.add(book);
+					books.add(book);
 				}
-		} catch (SQLException e) {
-			System.out.println("SQL Error in listing all books");
-		} finally {
-			try {
-				con.close();
-			} catch (SQLException e) {
+		    
+		    }
+		    catch(Exception e)
+		    {
+		        System.out.println("Sql Error in listing all books");
+		    } finally {
+		
+		    	try {
+			
+		    		con.close();
+	
+		    	} catch (SQLException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			    		e.printStackTrace();
 		}
-		return list;
+		    
+	}
+		System.out.println("BOOK--> " + books);
+		return books;
 	}
 
 	public void update(Book book) {
@@ -115,6 +127,36 @@ public class bookDao {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	
+	
+	public boolean updateBookById(Book book) {
+		Connection con=getDbConnection();
+		String sql="update user set title=?,author=?,price=?where book_id=?";
+		try {
+			PreparedStatement psmt=con.prepareStatement(sql);
+			psmt.setInt(1, book.getId());
+			psmt.setString(2,book.getTitle());
+			psmt.setString(3, book.getAuthor());
+			psmt.setFloat(4, book.getPrice());
+						
+			int rs = psmt.executeUpdate();
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			System.out.println("SQL Error in updating book");
+		}finally {
+			try {
+				con.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return false;
 	}
 
 	public Book getBookById(int id) {
@@ -148,11 +190,13 @@ public class bookDao {
 		}
 		return book;
 	}
+	
 
 	public boolean deleteBookbyid(Book book) {
 		Connection con = getDbConnection();
 		String sql = "delete from book where book_id=?";
 		try {
+			System.out.println("SQL Delete");
 			PreparedStatement pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, book.getId());
 			int rs = pstmt.executeUpdate();
@@ -169,6 +213,5 @@ public class bookDao {
 		}
 		return false;
 	}
-
 
 }

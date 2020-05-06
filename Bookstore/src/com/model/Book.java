@@ -2,11 +2,16 @@ package com.model;
 
 public class Book {
 
-	    public static int id;
-	    public static String title;
-	    public static String author;
-	    public static float price;
+	    public  int id;
+	    public String title;
+	    public  String author;
+	    public float price;
 	    
+		@Override
+		public String toString() {
+			return "Book [id=" + id + ", title=" + title + ", author=" + author + ", price=" + price + "]";
+		}
+
 		public Book() {
 		}
 		
@@ -33,6 +38,8 @@ public class Book {
 		}
 		public void setPrice(float price) {
 			this.price = price;
+			
 		}
-	        
+	       
+		
 }

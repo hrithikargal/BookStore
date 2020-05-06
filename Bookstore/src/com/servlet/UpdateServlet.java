@@ -25,8 +25,9 @@ public class UpdateServlet extends HttpServlet {
 		book.setTitle(request.getParameter("title"));
 		book.setAuthor(request.getParameter("author"));
 		book.setPrice(Float.parseFloat(request.getParameter("price")));
+		System.out.println(book);
 		dao.update(book);
-		request.getRequestDispatcher("BookList.jsp").forward(request, response);
+		request.getRequestDispatcher("ListServlet").forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

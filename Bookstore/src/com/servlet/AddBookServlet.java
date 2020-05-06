@@ -29,6 +29,11 @@ public class AddBookServlet extends HttpServlet {
 		book.setAuthor(author);
 		book.setPrice(price);
 		dao.addNewBook(book);
+		
+		
+		ArrayList<Book> list = dao.ListBook();
+		request.setAttribute("list", list);
+		
 		RequestDispatcher rd = request.getRequestDispatcher("AllBooks.jsp");
 		rd.forward(request, response);
 	}
